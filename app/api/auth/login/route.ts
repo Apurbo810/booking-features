@@ -38,10 +38,11 @@ export async function POST(req: Request) {
     },
   });
 
-  // store token in cookie
-  response.headers.set(
+  response.headers.append(
     "Set-Cookie",
-    `token=${token}; Path=/; HttpOnly; SameSite=Lax; Secure`
+    `token=${token}; Path=/; HttpOnly; SameSite=Lax; ${
+      process.env.NODE_ENV === "production" ? "Secure;" : ""
+    } Max-Age=604800`
   );
 
   return response;
