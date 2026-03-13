@@ -1,36 +1,156 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hotel Booking Website
 
-## Getting Started
+A full-stack **Hotel Booking Platform** built with **Next.js, MongoDB, Stripe, and Cloudinary** where users can browse rooms, book them online, and pay securely.
 
-First, run the development server:
+---
 
-```bash
+# Features
+
+### 👤 User Features
+
+* User registration and login (JWT authentication)
+* Browse available rooms
+* Select booking dates using a calendar
+* Secure payment with **Stripe Checkout**
+* Booking confirmation via **email**
+* Responsive Bootstrap UI
+
+### 🛠 Admin Features
+
+* Admin dashboard
+* View all booking requests
+* Monitor payment status
+
+---
+
+# Admin Login
+
+Use the following credentials to access the admin dashboard:
+
+**Email**
+
+[admin@gmail.com](mailto:admin@gmail.com)
+
+**Password**
+
+admin123
+
+After login, open:
+
+/admin
+
+to access the admin booking dashboard.
+
+---
+
+# Tech Stack
+
+**Frontend**
+
+* Next.js (App Router)
+* React
+* Bootstrap
+
+**Backend**
+
+* Next.js API Routes
+* JWT Authentication
+
+**Database**
+
+* MongoDB Atlas
+
+**Payments**
+
+* Stripe Checkout
+
+**Email**
+
+* Resend API
+
+**Media Storage**
+
+* Cloudinary
+
+---
+
+# Project Structure
+
+booking-ai-test
+├── app
+│   ├── api
+│   │   ├── auth
+│   │   ├── bookings
+│   │   ├── checkout
+│   │   ├── rooms
+│   │   └── admin
+│   ├── rooms
+│   ├── login
+│   ├── register
+│   └── admin
+├── components
+├── lib
+├── models
+└── public
+
+---
+
+# Environment Variables
+
+Create a `.env.local` file and add:
+
+MONGODB_URI=your_mongodb_connection
+STRIPE_SECRET_KEY=your_stripe_secret
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+RESEND_API_KEY=your_resend_api_key
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_key
+CLOUDINARY_API_SECRET=your_cloudinary_secret
+JWT_SECRET=your_jwt_secret
+
+---
+
+# Installation
+
+Clone the repository
+
+git clone https://github.com/yourusername/booking-ai-test.git
+
+Install dependencies
+
+npm install
+
+Run the development server
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# Deployment
 
-To learn more about Next.js, take a look at the following resources:
+The project is deployed using **Vercel**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Make sure the environment variables are added in the Vercel dashboard.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+# Bonus Implementations
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* Admin dashboard
+* JWT authentication
+* Email confirmation
+* Stripe payment gateway
+* Cloudinary image storage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+# Author
+
+Shariar Rahman Apurbo
+
+LinkedIn
+https://www.linkedin.com/in/apurbo-shariar-aab9b3251/

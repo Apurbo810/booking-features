@@ -1,65 +1,119 @@
-import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import RoomCard from "@/components/RoomCard";
 
-export default function Home() {
+async function getRooms() {
+  const res = await fetch("http://localhost:3000/api/rooms", {
+    cache: "no-store",
+  });
+
+  return res.json();
+}
+
+export default async function Home() {
+  const rooms = await getRooms();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
+    <div className="main-layout">
+
+      <Navbar />
+
+      {/* Banner */}
+      <section className="banner_main">
+        <div id="myCarousel" className="carousel slide banner" data-ride="carousel">
+
+          <ol className="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" className="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+          </ol>
+
+          <div className="carousel-inner">
+            <div className="carousel-item active">
+              <img className="first-slide" src="/images/banner1.jpg" alt="First slide" />
+            </div>
+
+            <div className="carousel-item">
+              <img className="second-slide" src="/images/banner2.jpg" alt="Second slide" />
+            </div>
+
+            <div className="carousel-item">
+              <img className="third-slide" src="/images/banner3.jpg" alt="Third slide" />
+            </div>
+          </div>
+
+          <a className="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+            <span className="carousel-control-prev-icon"></span>
+            <span className="sr-only">Previous</span>
           </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+
+          <a className="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+            <span className="carousel-control-next-icon"></span>
+            <span className="sr-only">Next</span>
           </a>
+
         </div>
-      </main>
+      </section>
+
+      {/* About */}
+      <div className="about">
+        <div className="container-fluid">
+          <div className="row">
+
+            <div className="col-md-5">
+              <div className="titlepage">
+                <h2>About Us</h2>
+                <p>
+                  The passage experienced a surge in popularity during the 1960s when Letraset used it
+                  on their dry-transfer sheets.
+                </p>
+                <a className="read_more" href="#">Read More</a>
+              </div>
+            </div>
+
+            <div className="col-md-7">
+              <div className="about_img">
+                <figure>
+                  <img src="/images/about.png" alt="#" />
+                </figure>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* Rooms */}
+      <div className="our_room">
+        <div className="container">
+
+          <div className="row">
+            <div className="col-md-12">
+              <div className="titlepage">
+                <h2>Our Room</h2>
+                <p>Lorem Ipsum available, but the majority have suffered</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            {rooms.slice(0, 6).map((room: any) => (
+              <RoomCard
+                key={room._id}
+                id={room._id}
+                image={room.image}
+                name={room.name}
+                description={room.description}
+                price={room.price}
+              />
+            ))}
+          </div>
+
+        </div>
+      </div>
+
+      <Footer />
+
     </div>
   );
 }

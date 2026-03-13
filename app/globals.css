@@ -24,3 +24,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+.calendar-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.rdp {
+  width: 100%;
+}
+
+.rdp-months {
+  display: flex;
+  justify-content: center;
+}
