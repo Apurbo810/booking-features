@@ -3,13 +3,18 @@ import Footer from "@/components/Footer";
 import RoomCard from "@/components/RoomCard";
 
 async function getRooms() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  try {
+    const res = await fetch("/api/rooms", {
+      cache: "no-store",
+    });
 
-  const res = await fetch(`${baseUrl}/api/rooms`, {
-    cache: "no-store",
-  });
+    if (!res.ok) return [];
 
-  return res.json();
+    return res.json();
+  } catch (error) {
+    console.error("Rooms fetch error:", error);
+    return [];
+  }
 }
 
 export default async function Home() {
