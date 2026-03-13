@@ -1,29 +1,36 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RoomCard from "@/components/RoomCard";
 
-async function getRooms() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/rooms`, {
-      cache: "no-store",
-    });
+export default function RoomsPage() {
+  const [rooms, setRooms] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    if (!res.ok) {
-      console.error("Failed to fetch rooms:", res.status);
-      return [];
+  useEffect(() => {
+    async function getRooms() {
+      try {
+        const res = await fetch("/api/rooms");
+
+        if (!res.ok) {
+          console.error("Failed to fetch rooms:", res.status);
+          setRooms([]);
+        } else {
+          const data = await res.json();
+          setRooms(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        console.error("Rooms fetch error:", error);
+        setRooms([]);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    const data = await res.json();
-
-    return Array.isArray(data) ? data : [];
-  } catch (error) {
-    console.error("Rooms fetch error:", error);
-    return [];
-  }
-}
-
-export default async function RoomsPage() {
-  const rooms = await getRooms();
+    getRooms();
+  }, []);
 
   return (
     <div className="main-layout">
@@ -42,10 +49,9 @@ export default async function RoomsPage() {
         </div>
       </div>
 
-      {/* Our Room */}
+      {/* Rooms */}
       <div className="our_room">
         <div className="container">
-
           <div className="row">
             <div className="col-md-12">
               <div className="titlepage">
@@ -57,7 +63,9 @@ export default async function RoomsPage() {
           </div>
 
           <div className="row">
-            {rooms.length === 0 ? (
+            {loading ? (
+              <p className="text-center">Loading rooms...</p>
+            ) : rooms.length === 0 ? (
               <p className="text-center">No rooms available</p>
             ) : (
               rooms.map((room: any) => (
@@ -72,7 +80,6 @@ export default async function RoomsPage() {
               ))
             )}
           </div>
-
         </div>
       </div>
 
