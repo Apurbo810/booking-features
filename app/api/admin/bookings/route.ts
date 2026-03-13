@@ -2,23 +2,42 @@ import { connectDB } from "@/lib/mongodb";
 import Booking from "@/models/Booking";
 import Room from "@/models/Room";
 import { verifyToken } from "@/lib/jwt";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
+
+type UserToken = {
+  id: string;
+  email: string;
+  role: string;
+};
 
 export async function GET() {
   try {
 
     const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
+    let token = cookieStore.get("token")?.value;
+
+    // fallback if cookie not detected
+    if (!token) {
+      const headerStore = await headers(); // ✅ must await
+      const cookieHeader = headerStore.get("cookie");
+
+      if (cookieHeader) {
+        const match = cookieHeader.match(/token=([^;]+)/);
+        if (match) {
+          token = match[1];
+        }
+      }
+    }
 
     if (!token) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const user = verifyToken(token) as any;
+    const user = verifyToken(token) as UserToken;
 
-    if (user.role !== "admin") {
+    if (!user || user.role !== "admin") {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
@@ -39,5 +58,6 @@ export async function GET() {
       { message: "Unauthorized" },
       { status: 401 }
     );
+
   }
 }
