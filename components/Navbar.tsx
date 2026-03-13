@@ -20,11 +20,16 @@ export default function Navbar() {
     }
   }, []);
 
-  function handleLogout() {
+function handleLogout() {
+  fetch("/api/logout", {
+    method: "POST",
+    credentials: "include",
+  }).then(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     window.location.href = "/";
-  }
+  });
+}
 
   return (
     <header>
