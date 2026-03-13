@@ -29,8 +29,7 @@ export async function POST(req: Request) {
 
   const token = signToken(user);
 
-  return Response.json({
-    token,
+  const response = Response.json({
     user: {
       id: user._id,
       name: user.name,
@@ -38,4 +37,12 @@ export async function POST(req: Request) {
       role: user.role,
     },
   });
+
+  // store token in cookie
+  response.headers.set(
+    "Set-Cookie",
+    `token=${token}; Path=/; HttpOnly; SameSite=Lax; Secure`
+  );
+
+  return response;
 }

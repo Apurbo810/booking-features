@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DateRange } from "react-day-picker";
 import BookingCalendar from "./BookingCalendar";
 
@@ -14,12 +14,29 @@ export default function BookingForm({
 
   const [range, setRange] = useState<DateRange | undefined>();
   const [email, setEmail] = useState("");
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+
+    fetch("/api/auth/me")
+      .then(res => res.json())
+      .then(data => {
+
+        if (data.user) {
+          setUserEmail(data.user.email);
+          setEmail(data.user.email);
+        }
+
+      });
+
+  }, []);
 
   const nights =
     range?.from && range?.to
       ? Math.ceil(
           (range.to.getTime() - range.from.getTime()) /
-            (1000 * 60 * 60 * 24)
+          (1000 * 60 * 60 * 24)
         )
       : 0;
 
@@ -31,6 +48,13 @@ export default function BookingForm({
       alert("Select booking dates");
       return;
     }
+
+    if (!email) {
+      alert("Enter email");
+      return;
+    }
+
+    setLoading(true);
 
     const res = await fetch("/api/checkout", {
       method: "POST",
@@ -47,6 +71,8 @@ export default function BookingForm({
 
     const data = await res.json();
 
+    setLoading(false);
+
     if (!res.ok) {
       alert(data.message);
       return;
@@ -60,27 +86,29 @@ export default function BookingForm({
 
       <BookingCalendar roomId={roomId} onSelect={setRange} />
 
-      {/* Total price */}
       {nights > 0 && (
-        <div className="alert alert-info mt-3">
+        <div className="alert alert-info mt-3 text-center">
           {nights} night(s) × ${price} = <strong>${total}</strong>
         </div>
       )}
 
-      {/* Email field */}
-      <input
-        type="email"
-        placeholder="Your email"
-        className="form-control mt-2"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      {/* Email input ONLY if user is NOT logged in */}
+      {!userEmail && (
+        <input
+          type="email"
+          placeholder="Enter your email"
+          className="form-control mt-2"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      )}
 
       <button
         className="btn btn-primary mt-3 w-100"
         onClick={handleBooking}
+        disabled={loading}
       >
-        Book Now
+        {loading ? "Redirecting..." : "Book Now"}
       </button>
 
     </div>

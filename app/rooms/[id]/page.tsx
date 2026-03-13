@@ -51,7 +51,7 @@ export default async function RoomPage({
         <div className="row">
 
           {/* Room Image */}
-          <div className="col-md-6">
+          <div className="col-lg-6 col-12 mb-4">
             <img
               src={room.image}
               alt={room.name}
@@ -60,7 +60,7 @@ export default async function RoomPage({
           </div>
 
           {/* Room Info */}
-          <div className="col-md-6">
+          <div className="col-lg-6 col-12">
 
             <h2>{room.name}</h2>
 
@@ -73,7 +73,8 @@ export default async function RoomPage({
             </h4>
 
             <div className="card p-3 shadow-sm">
-              <h5>Book This Room</h5>
+
+              <h5 className="mb-3">Book This Room</h5>
 
               <BookingForm
                 roomId={room._id.toString()}
