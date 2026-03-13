@@ -12,10 +12,10 @@ type UserToken = {
 };
 
 export async function GET() {
-
   try {
-
+    // Next.js 15 cookies must be awaited
     const cookieStore = await cookies();
+
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
@@ -27,7 +27,7 @@ export async function GET() {
 
     const user = verifyToken(token) as UserToken;
 
-    if (user.role !== "admin") {
+    if (!user || user.role !== "admin") {
       return Response.json(
         { message: "Forbidden" },
         { status: 403 }
@@ -36,23 +36,38 @@ export async function GET() {
 
     await connectDB();
 
-    const bookings = await Booking
-      .find({})
-      .populate("roomId", "name")
+    const bookings = await Booking.find({})
+      .populate({
+        path: "roomId",
+        select: "name",
+      })
       .sort({ createdAt: -1 })
       .lean();
 
-    return Response.json(bookings);
+    // Convert Mongo ObjectId → string (important for Vercel)
+    const safeBookings = bookings.map((b: any) => ({
+      _id: b._id.toString(),
+      email: b.email,
+      roomId: b.roomId
+        ? {
+            _id: b.roomId._id.toString(),
+            name: b.roomId.name,
+          }
+        : null,
+      checkInDate: b.checkInDate,
+      checkOutDate: b.checkOutDate,
+      paymentStatus: b.paymentStatus,
+      createdAt: b.createdAt,
+    }));
+
+    return Response.json(safeBookings);
 
   } catch (error) {
-
     console.error("Admin bookings error:", error);
 
     return Response.json(
       { message: "Unauthorized" },
       { status: 401 }
     );
-
   }
-
 }
