@@ -1,3 +1,4 @@
+
 import Script from "next/script";
 
 export default function RootLayout({
@@ -15,7 +16,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="/css/jquery.mCustomScrollbar.min.css" />
       </head>
 
-      <body>
+      <body className="main-layout">
         {children}
 
         <Script src="/js/jquery.min.js" strategy="beforeInteractive" />

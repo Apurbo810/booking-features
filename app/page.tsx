@@ -16,103 +16,97 @@ export default async function Home() {
   return (
     <div className="main-layout">
 
-      <Navbar />
+      <div className="container-fluid p-0">
 
-      {/* Banner */}
-      <section className="banner_main">
-        <div id="myCarousel" className="carousel slide banner" data-ride="carousel">
+        <Navbar />
 
-          <ol className="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" className="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
-          </ol>
+        {/* Banner */}
+        <section className="banner_main">
+          <div id="myCarousel" className="carousel slide banner" data-ride="carousel">
 
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img className="first-slide" src="/images/banner1.jpg" alt="First slide" />
-            </div>
+            <ol className="carousel-indicators">
+              <li data-target="#myCarousel" data-slide-to="0" className="active"></li>
+              <li data-target="#myCarousel" data-slide-to="1"></li>
+              <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
 
-            <div className="carousel-item">
-              <img className="second-slide" src="/images/banner2.jpg" alt="Second slide" />
-            </div>
-
-            <div className="carousel-item">
-              <img className="third-slide" src="/images/banner3.jpg" alt="Third slide" />
-            </div>
-          </div>
-
-          <a className="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-            <span className="carousel-control-prev-icon"></span>
-            <span className="sr-only">Previous</span>
-          </a>
-
-          <a className="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-            <span className="carousel-control-next-icon"></span>
-            <span className="sr-only">Next</span>
-          </a>
-
-        </div>
-      </section>
-
-      {/* About */}
-      <div className="about">
-        <div className="container-fluid">
-          <div className="row">
-
-            <div className="col-md-5">
-              <div className="titlepage">
-                <h2>About Us</h2>
-                <p>
-                  The passage experienced a surge in popularity during the 1960s when Letraset used it
-                  on their dry-transfer sheets.
-                </p>
-                <a className="read_more" href="#">Read More</a>
+            <div className="carousel-inner">
+              <div className="carousel-item active">
+                <img src="/images/banner1.jpg" alt="First slide" />
               </div>
-            </div>
 
-            <div className="col-md-7">
-              <div className="about_img">
-                <figure>
-                  <img src="/images/about.png" alt="#" />
-                </figure>
+              <div className="carousel-item">
+                <img src="/images/banner2.jpg" alt="Second slide" />
+              </div>
+
+              <div className="carousel-item">
+                <img src="/images/banner3.jpg" alt="Third slide" />
               </div>
             </div>
 
           </div>
+        </section>
+
+        {/* About */}
+        <div className="about">
+          <div className="container-fluid">
+            <div className="row">
+
+              <div className="col-md-5">
+                <div className="titlepage">
+                  <h2>About Us</h2>
+                  <p>
+                    The passage experienced a surge in popularity during the
+                    1960s when Letraset used it on their dry-transfer sheets.
+                  </p>
+                  <a className="read_more" href="#">Read More</a>
+                </div>
+              </div>
+
+              <div className="col-md-7">
+                <div className="about_img">
+                  <figure>
+                    <img src="/images/about.png" alt="#" />
+                  </figure>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
+
+        {/* Rooms */}
+        <div className="our_room">
+          <div className="container">
+
+            <div className="row">
+              <div className="col-md-12">
+                <div className="titlepage">
+                  <h2>Our Room</h2>
+                  <p>Lorem Ipsum available, but the majority have suffered</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              {rooms.slice(0, 6).map((room: any) => (
+                <RoomCard
+                  key={room._id}
+                  id={room._id}
+                  image={room.image}
+                  name={room.name}
+                  description={room.description}
+                  price={room.price}
+                />
+              ))}
+            </div>
+
+          </div>
+        </div>
+
+        <Footer />
+
       </div>
-
-      {/* Rooms */}
-      <div className="our_room">
-        <div className="container">
-
-          <div className="row">
-            <div className="col-md-12">
-              <div className="titlepage">
-                <h2>Our Room</h2>
-                <p>Lorem Ipsum available, but the majority have suffered</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="row">
-            {rooms.slice(0, 6).map((room: any) => (
-              <RoomCard
-                key={room._id}
-                id={room._id}
-                image={room.image}
-                name={room.name}
-                description={room.description}
-                price={room.price}
-              />
-            ))}
-          </div>
-
-        </div>
-      </div>
-
-      <Footer />
 
     </div>
   );
