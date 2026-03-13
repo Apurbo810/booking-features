@@ -19,6 +19,11 @@ export default function AdminPage() {
           credentials: "include"
         });
 
+        if (!res.ok) {
+          window.location.href = "/login";
+          return;
+        }
+
         const data = await res.json();
 
         if (Array.isArray(data)) {
@@ -66,13 +71,13 @@ export default function AdminPage() {
 
               {bookings.map((b) => (
 
-                  <tr key={b._id}>
-                    <td>{b.email}</td>
-                    <td>{b.roomId?.name}</td>
-                    <td>{new Date(b.checkInDate).toLocaleDateString()}</td>
-                    <td>{new Date(b.checkOutDate).toLocaleDateString()}</td>
-                    <td>{b.paymentStatus || "pending"}</td>
-                  </tr>
+                <tr key={b._id}>
+                  <td>{b.email}</td>
+                  <td>{b.roomId?.name}</td>
+                  <td>{new Date(b.checkInDate).toLocaleDateString()}</td>
+                  <td>{new Date(b.checkOutDate).toLocaleDateString()}</td>
+                  <td>{b.paymentStatus || "pending"}</td>
+                </tr>
 
               ))}
 

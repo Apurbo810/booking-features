@@ -3,6 +3,8 @@ import Booking from "@/models/Booking";
 import { verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 type UserToken = {
   id: string;
   email: string;
@@ -10,6 +12,7 @@ type UserToken = {
 };
 
 export async function GET() {
+
   try {
 
     const cookieStore = await cookies();
@@ -34,7 +37,7 @@ export async function GET() {
     await connectDB();
 
     const bookings = await Booking
-      .find()
+      .find({})
       .populate("roomId", "name")
       .sort({ createdAt: -1 })
       .lean();
@@ -51,4 +54,5 @@ export async function GET() {
     );
 
   }
+
 }
