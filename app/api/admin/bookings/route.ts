@@ -2,11 +2,16 @@ import { connectDB } from "@/lib/mongodb";
 import Booking from "@/models/Booking";
 import { verifyToken } from "@/lib/jwt";
 
+type UserToken = {
+  id: string;
+  email: string;
+  role: string;
+};
+
 export async function GET(req: Request) {
 
   try {
 
-    // read cookie header
     const cookieHeader = req.headers.get("cookie");
 
     if (!cookieHeader) {
@@ -16,7 +21,6 @@ export async function GET(req: Request) {
       );
     }
 
-    // extract token from cookie
     const token = cookieHeader
       .split("; ")
       .find(c => c.startsWith("token="))
@@ -29,8 +33,7 @@ export async function GET(req: Request) {
       );
     }
 
-    // verify token
-    const user = verifyToken(token);
+    const user = verifyToken(token) as UserToken;
 
     if (user.role !== "admin") {
       return Response.json(
@@ -43,6 +46,7 @@ export async function GET(req: Request) {
 
     const bookings = await Booking
       .find()
+      .populate("roomId", "name")
       .sort({ createdAt: -1 })
       .lean();
 
@@ -56,6 +60,5 @@ export async function GET(req: Request) {
       { message: "Unauthorized" },
       { status: 401 }
     );
-
   }
 }
