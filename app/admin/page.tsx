@@ -7,18 +7,33 @@ import Footer from "@/components/Footer";
 export default function AdminPage() {
 
   const [bookings, setBookings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
-    const token = localStorage.getItem("token");
+    async function loadBookings() {
 
-    fetch("/api/admin/bookings", {
-      headers: {
-        Authorization: `Bearer ${token}`
+      try {
+
+        const res = await fetch("/api/admin/bookings", {
+          credentials: "include"
+        });
+
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          setBookings(data);
+        }
+
+      } catch (err) {
+        console.error("Failed to load bookings");
       }
-    })
-      .then(res => res.json())
-      .then(data => setBookings(data));
+
+      setLoading(false);
+
+    }
+
+    loadBookings();
 
   }, []);
 
@@ -31,35 +46,41 @@ export default function AdminPage() {
 
         <h2>Admin Booking Dashboard</h2>
 
-        <table className="table table-bordered mt-4">
+        {loading && <p>Loading bookings...</p>}
 
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Room</th>
-              <th>Check-in</th>
-              <th>Check-out</th>
-              <th>Status</th>
-            </tr>
-          </thead>
+        {!loading && (
 
-          <tbody>
+          <table className="table table-bordered mt-4">
 
-            {bookings.map((b) => (
-
-              <tr key={b._id}>
-                <td>{b.email}</td>
-                <td>{b.roomId}</td>
-                <td>{new Date(b.checkInDate).toLocaleDateString()}</td>
-                <td>{new Date(b.checkOutDate).toLocaleDateString()}</td>
-                <td>{b.paymentStatus}</td>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Status</th>
               </tr>
+            </thead>
 
-            ))}
+            <tbody>
 
-          </tbody>
+              {bookings.map((b) => (
 
-        </table>
+                <tr key={b._id}>
+                  <td>{b.email}</td>
+                  <td>{b.roomId}</td>
+                  <td>{new Date(b.checkInDate).toLocaleDateString()}</td>
+                  <td>{new Date(b.checkOutDate).toLocaleDateString()}</td>
+                  <td>{b.paymentStatus}</td>
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        )}
 
       </div>
 
