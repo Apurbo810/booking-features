@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
 import Booking from "@/models/Booking";
 import { verifyToken } from "@/lib/jwt";
+import { cookies } from "next/headers";
 
 type UserToken = {
   id: string;
@@ -8,23 +9,11 @@ type UserToken = {
   role: string;
 };
 
-export async function GET(req: Request) {
-
+export async function GET() {
   try {
 
-    const cookieHeader = req.headers.get("cookie");
-
-    if (!cookieHeader) {
-      return Response.json(
-        { message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    const token = cookieHeader
-      .split("; ")
-      .find(c => c.startsWith("token="))
-      ?.split("=")[1];
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
 
     if (!token) {
       return Response.json(
@@ -60,5 +49,6 @@ export async function GET(req: Request) {
       { message: "Unauthorized" },
       { status: 401 }
     );
+
   }
 }

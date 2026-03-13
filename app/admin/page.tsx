@@ -66,13 +66,13 @@ export default function AdminPage() {
 
               {bookings.map((b) => (
 
-                <tr key={b._id}>
-                  <td>{b.email}</td>
-                  <td>{b.roomId}</td>
-                  <td>{new Date(b.checkInDate).toLocaleDateString()}</td>
-                  <td>{new Date(b.checkOutDate).toLocaleDateString()}</td>
-                  <td>{b.paymentStatus}</td>
-                </tr>
+                  <tr key={b._id}>
+                    <td>{b.email}</td>
+                    <td>{b.roomId?.name}</td>
+                    <td>{new Date(b.checkInDate).toLocaleDateString()}</td>
+                    <td>{new Date(b.checkOutDate).toLocaleDateString()}</td>
+                    <td>{b.paymentStatus || "pending"}</td>
+                  </tr>
 
               ))}
 
