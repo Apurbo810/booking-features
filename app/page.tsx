@@ -3,16 +3,16 @@ export const dynamic = "force-dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RoomCard from "@/components/RoomCard";
+import { connectDB } from "@/lib/mongodb";
+import Room from "@/models/Room";
 
 async function getRooms() {
   try {
-    const res = await fetch("/api/rooms", {
-      cache: "no-store",
-    });
+    await connectDB();
 
-    if (!res.ok) return [];
+    const rooms = await Room.find().lean();
 
-    return res.json();
+    return JSON.parse(JSON.stringify(rooms));
   } catch (error) {
     console.error("Rooms fetch error:", error);
     return [];
