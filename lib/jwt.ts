@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 
+const JWT_SECRET = process.env.JWT_SECRET!;
+
 export function signToken(user: any) {
   return jwt.sign(
     {
@@ -7,13 +9,11 @@ export function signToken(user: any) {
       email: user.email,
       role: user.role,
     },
-    process.env.JWT_SECRET!,
-    {
-      expiresIn: "7d",
-    }
+    JWT_SECRET,
+    { expiresIn: "7d" }
   );
 }
 
 export function verifyToken(token: string) {
-  return jwt.verify(token, process.env.JWT_SECRET!);
+  return jwt.verify(token, JWT_SECRET);
 }

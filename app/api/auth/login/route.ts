@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import { signToken } from "@/lib/jwt";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
 
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return Response.json(
+    return NextResponse.json(
       { message: "Invalid credentials" },
       { status: 401 }
     );
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
   const valid = await bcrypt.compare(password, user.password);
 
   if (!valid) {
-    return Response.json(
+    return NextResponse.json(
       { message: "Invalid credentials" },
       { status: 401 }
     );
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
 
   const token = signToken(user);
 
-  const response = Response.json({
+  const response = NextResponse.json({
     user: {
       id: user._id,
       name: user.name,
@@ -38,12 +39,13 @@ export async function POST(req: Request) {
     },
   });
 
-  response.headers.append(
-    "Set-Cookie",
-    `token=${token}; Path=/; HttpOnly; SameSite=Lax; ${
-      process.env.NODE_ENV === "production" ? "Secure;" : ""
-    } Max-Age=604800`
-  );
+  response.cookies.set("token", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7,
+  });
 
   return response;
 }

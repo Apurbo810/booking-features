@@ -12,24 +12,21 @@ export default function Navbar() {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
-        setUser(null);
-      }
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
-function handleLogout() {
-  fetch("/api/logout", {
-    method: "POST",
-    credentials: "include",
-  }).then(() => {
-    localStorage.removeItem("token");
+  async function handleLogout() {
+
+    await fetch("/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
     localStorage.removeItem("user");
-    window.location.href = "/";
-  });
-}
+
+    window.location.href = "/login";
+  }
 
   return (
     <header>
@@ -123,7 +120,7 @@ function handleLogout() {
 
                         <div className="dropdown-menu dropdown-menu-right">
                       {user.role === "admin" && (
-                            <Link className="dropdown-item" href="/admin">
+                            <Link className="dropdown-item" href="/admin/dashboard">
                               Admin Dashboard
                             </Link>
                           )}

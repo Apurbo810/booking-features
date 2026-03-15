@@ -1,14 +1,23 @@
-import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
+import { verifyToken } from "./jwt";
 
-export function getUserFromRequest(req: Request) {
+type UserToken = {
+  id: string;
+  email: string;
+  role: string;
+};
 
-  const authHeader = req.headers.get("authorization");
+export async function getUser(): Promise<UserToken | null> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
 
-  if (!authHeader) throw new Error("Unauthorized");
+    if (!token) return null;
 
-  const token = authHeader.split(" ")[1];
+    const user = verifyToken(token) as UserToken;
 
-  const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-
-  return decoded;
+    return user;
+  } catch {
+    return null;
+  }
 }

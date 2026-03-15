@@ -1,24 +1,20 @@
+import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
 
-export async function GET(req: Request) {
-
-  const cookie = req.headers.get("cookie");
-
-  if (!cookie) return Response.json({ user: null });
-
-  const token = cookie.split("token=")[1];
-
-  if (!token) return Response.json({ user: null });
-
+export async function GET() {
   try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+
+    if (!token) {
+      return Response.json({ user: null });
+    }
 
     const user = verifyToken(token);
 
     return Response.json({ user });
 
   } catch {
-
     return Response.json({ user: null });
-
   }
 }

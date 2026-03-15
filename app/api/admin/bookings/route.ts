@@ -1,43 +1,19 @@
 import { connectDB } from "@/lib/mongodb";
 import Booking from "@/models/Booking";
-import Room from "@/models/Room";
-import { verifyToken } from "@/lib/jwt";
-import { cookies, headers } from "next/headers";
+import { getUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
-
-type UserToken = {
-  id: string;
-  email: string;
-  role: string;
-};
 
 export async function GET() {
   try {
 
-    const cookieStore = await cookies();
-    let token = cookieStore.get("token")?.value;
+    const user = await getUser(); // must await
 
-    // fallback if cookie not detected
-    if (!token) {
-      const headerStore = await headers(); // ✅ must await
-      const cookieHeader = headerStore.get("cookie");
-
-      if (cookieHeader) {
-        const match = cookieHeader.match(/token=([^;]+)/);
-        if (match) {
-          token = match[1];
-        }
-      }
-    }
-
-    if (!token) {
+    if (!user) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const user = verifyToken(token) as UserToken;
-
-    if (!user || user.role !== "admin") {
+    if (user.role !== "admin") {
       return Response.json({ message: "Forbidden" }, { status: 403 });
     }
 
@@ -55,8 +31,8 @@ export async function GET() {
     console.error("Admin bookings error:", error);
 
     return Response.json(
-      { message: "Unauthorized" },
-      { status: 401 }
+      { message: "Server error" },
+      { status: 500 }
     );
 
   }

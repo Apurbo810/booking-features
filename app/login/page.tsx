@@ -17,6 +17,7 @@ export default function LoginPage() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         email,
         password,
@@ -30,10 +31,7 @@ export default function LoginPage() {
       return;
     }
 
-    localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
-
-    alert("Login successful");
 
     window.location.href = "/";
   }
@@ -44,7 +42,6 @@ export default function LoginPage() {
 
       <div className="container mt-5 mb-5">
         <div className="row justify-content-center">
-
           <div className="col-md-5">
 
             <div className="card shadow p-4">
@@ -80,7 +77,6 @@ export default function LoginPage() {
             </div>
 
           </div>
-
         </div>
       </div>
 
